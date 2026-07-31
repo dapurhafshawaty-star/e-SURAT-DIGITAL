@@ -1,0 +1,6 @@
+{
+  "name": "e-Surat Digital",
+  "description": "Sistem Administrasi Surat Menyurat Digital, Disposisi, dan Persetujuan Berjenjang Resmi",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
