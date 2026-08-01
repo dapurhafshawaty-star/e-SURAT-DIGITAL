@@ -29,6 +29,8 @@ import {
   initialConfig
 } from '../data/initialData';
 import { formatNomorSuratOtomatis } from '../utils/formatter';
+import { db } from '../firebase';
+import { doc, setDoc, onSnapshot } from 'firebase/firestore';
 
 export interface AppState {
   currentUser: User;
@@ -94,20 +96,7 @@ export class ApiService {
   }
 
   private async init() {
-    try {
-      const res = await fetch('/api/data');
-      if (res.ok) {
-        const data = await res.json();
-        if (data && data.users) {
-          this.state = { ...this.state, ...data };
-          this.notify();
-          return;
-        }
-      }
-    } catch (e) {
-      console.warn('Backend endpoint unavailable, falling back to localStorage');
-    }
-
+    // 1. Try local storage first for instant render
     const local = localStorage.getItem(STORAGE_KEY);
     if (local) {
       try {
@@ -116,6 +105,47 @@ export class ApiService {
       } catch (err) {
         console.error('Failed to parse local storage data', err);
       }
+    }
+
+    // 2. Setup Google Cloud Firestore Real-time listener
+    try {
+      const docRef = doc(db, 'app_state', 'main');
+      onSnapshot(
+        docRef,
+        (snapshot) => {
+          if (snapshot.exists()) {
+            const cloudData = snapshot.data() as Partial<AppState>;
+            if (cloudData && cloudData.users) {
+              this.state = { ...this.state, ...cloudData };
+              this.listeners.forEach((l) => l());
+            }
+          } else {
+            // Initialize cloud store on first load
+            setDoc(docRef, this.state, { merge: true }).catch((err) =>
+              console.warn('Initial Firestore setup error:', err)
+            );
+          }
+        },
+        (error) => {
+          console.warn('Firestore snapshot listener connection status:', error.message);
+        }
+      );
+    } catch (err) {
+      console.warn('Firestore real-time connection skipped:', err);
+    }
+
+    // 3. Fallback sync from backend API
+    try {
+      const res = await fetch('/api/data');
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.users) {
+          this.state = { ...this.state, ...data };
+          this.listeners.forEach((l) => l());
+        }
+      }
+    } catch (e) {
+      console.warn('Backend endpoint fetch fallback handled');
     }
   }
 
@@ -134,11 +164,19 @@ export class ApiService {
   private async saveState() {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
+
+      // Sync to Express backend endpoint
       fetch('/api/data', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(this.state)
       }).catch((e) => console.warn('Server sync error', e));
+
+      // Sync to Google Cloud Firestore database
+      const docRef = doc(db, 'app_state', 'main');
+      setDoc(docRef, this.state, { merge: true }).catch((err) =>
+        console.warn('Firestore sync error:', err)
+      );
     } catch (err) {
       console.error('Save state error:', err);
     }

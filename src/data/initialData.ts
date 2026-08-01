@@ -14,9 +14,11 @@ import {
 } from '../types';
 
 export const initialInstansi: MasterInstansi = {
-  nama: "PEMERINTAH KOTA DIGITAL",
-  namaYayasan: "DINAS KOMUNIKASI DAN INFORMATIKA",
+  barisAtasHeader: "PEMERINTAH PROVINSI / KABUPATEN DIGITAL",
+  nama: "DINAS KOMUNIKASI DAN INFORMATIKA",
+  namaYayasan: "SECRETARIAT GENERAL & LAYANAN ELEKTRONIK",
   logo: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%230369a1'/><path d='M30,65 L50,25 L70,65 Z' fill='%23ffffff'/><circle cx='50' cy='50' r='10' fill='%23f59e0b'/></svg>",
+  logoSize: 68,
   alamat: "Jl. Pemuda No. 100, Kompleks Balai Kota, Kota Digital 10110",
   telepon: "(021) 555-0199 / 555-0200",
   email: "sekretariat@diskominfo.go.id",
@@ -27,10 +29,27 @@ export const initialInstansi: MasterInstansi = {
   jabatanPimpinan: "Kepala Dinas Komunikasi dan Informatika",
   kodeInstansi: "DISKOMINFO",
   kopGarisGanda: true,
+  kopGarisStyle: "double",
   kopSubHeader: "Sistem Administrasi Persuratan & Naskah Dinas Digital Terintegrasi",
   footerText: "Dokumen ini sah dan telah ditandatangani secara elektronik menggunakan sertifikat digital resmi.",
   stempelDigital: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'><circle cx='60' cy='60' r='52' stroke='%230f172a' stroke-width='3' fill='none' stroke-dasharray='4 2'/><circle cx='60' cy='60' r='44' stroke='%230369a1' stroke-width='2' fill='none'/><text x='60' y='55' font-size='8' font-weight='bold' text-anchor='middle' fill='%230369a1'>DINAS KOMINFO</text><text x='60' y='68' font-size='7' text-anchor='middle' fill='%230369a1'>VERIFIED E-SIGN</text></svg>",
-  ttdDigitalPimpinan: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='70' viewBox='0 0 180 70'><path d='M20,45 Q40,10 60,40 T100,20 T140,50 T160,25' stroke='%230f172a' stroke-width='2.5' fill='none'/><text x='20' y='62' font-size='10' font-family='serif' fill='%23334155'>Dr. H. Ahmad Wijaya, M.Si.</text></svg>"
+  ttdDigitalPimpinan: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='70' viewBox='0 0 180 70'><path d='M20,45 Q40,10 60,40 T100,20 T140,50 T160,25' stroke='%230f172a' stroke-width='2.5' fill='none'/><text x='20' y='62' font-size='10' font-family='serif' fill='%23334155'>Dr. H. Ahmad Wijaya, M.Si.</text></svg>",
+  
+  kopAlign: "center",
+  fontFamilyHeader: "Times New Roman",
+  barisAtasSize: 13,
+  barisAtasBold: true,
+  barisAtasUppercase: true,
+  namaInstansiSize: 16,
+  namaInstansiBold: true,
+  namaInstansiUppercase: true,
+  subHeaderSize: 13,
+  subHeaderBold: true,
+  subHeaderUppercase: true,
+  alamatSize: 11,
+  alamatItalic: false,
+  kontakSize: 10,
+  kontakItalic: true
 };
 
 export const initialUsers: User[] = [

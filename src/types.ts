@@ -35,7 +35,10 @@ export interface User {
 export interface MasterInstansi {
   nama: string;
   namaYayasan?: string;
+  barisAtasHeader?: string;
   logo: string;
+  logoKanan?: string;
+  logoSize?: number;
   alamat: string;
   telepon: string;
   email: string;
@@ -46,10 +49,38 @@ export interface MasterInstansi {
   jabatanPimpinan: string;
   kodeInstansi: string;
   kopGarisGanda: boolean;
+  kopGarisStyle?: 'double' | 'single_thick' | 'dashed' | 'none';
   kopSubHeader?: string;
   footerText?: string;
   stempelDigital?: string;
   ttdDigitalPimpinan?: string;
+
+  // Formatting & Alignment Controls for Kop Text
+  kopAlign?: 'center' | 'left' | 'right';
+  fontFamilyHeader?: 'Times New Roman' | 'Arial' | 'Calibri' | 'Georgia' | 'Courier New';
+  
+  // Baris 1: Header Atas (Instansi Induk)
+  barisAtasSize?: number;
+  barisAtasBold?: boolean;
+  barisAtasUppercase?: boolean;
+
+  // Baris 2: Nama Instansi Utama
+  namaInstansiSize?: number;
+  namaInstansiBold?: boolean;
+  namaInstansiUppercase?: boolean;
+
+  // Baris 3: Sub Header / Unit Kerja
+  subHeaderSize?: number;
+  subHeaderBold?: boolean;
+  subHeaderUppercase?: boolean;
+
+  // Baris 4: Alamat Lengkap
+  alamatSize?: number;
+  alamatItalic?: boolean;
+
+  // Baris 5: Kontak & Informasi
+  kontakSize?: number;
+  kontakItalic?: boolean;
 }
 
 export interface MasterJabatan {

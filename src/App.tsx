@@ -121,6 +121,7 @@ export default function App() {
             <div className="p-8">
               <SuratMasukList
                 suratMasukList={appState.suratMasukList}
+                instansi={appState.instansi}
                 klasifikasis={appState.klasifikasis}
                 currentUser={appState.currentUser}
                 onOpenCreate={() => {

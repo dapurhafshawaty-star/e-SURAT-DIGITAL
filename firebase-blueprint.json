@@ -1,0 +1,188 @@
+{
+  "entities": {
+    "users": {
+      "title": "Pegawai & Users",
+      "description": "User accounts and employee data",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "nip": { "type": "string" },
+        "nama": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string" },
+        "jabatan": { "type": "string" },
+        "unitKerja": { "type": "string" },
+        "foto": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "nama", "email", "role"]
+    },
+    "suratMasuk": {
+      "title": "Surat Masuk",
+      "description": "Incoming letters and documents",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "nomorAgenda": { "type": "string" },
+        "nomorSurat": { "type": "string" },
+        "tanggalSurat": { "type": "string" },
+        "tanggalDiterima": { "type": "string" },
+        "pengirimInstansi": { "type": "string" },
+        "perihal": { "type": "string" },
+        "klasifikasiKode": { "type": "string" },
+        "sifatSurat": { "type": "string" },
+        "ringkasanIsi": { "type": "string" },
+        "status": { "type": "string" },
+        "disposisiCount": { "type": "number" },
+        "petugasPenerima": { "type": "string" }
+      },
+      "required": ["id", "nomorSurat", "perihal"]
+    },
+    "suratKeluar": {
+      "title": "Surat Keluar",
+      "description": "Outgoing letters and approval drafts",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "nomorSurat": { "type": "string" },
+        "tanggalSurat": { "type": "string" },
+        "tujuanInstansi": { "type": "string" },
+        "perihal": { "type": "string" },
+        "klasifikasiKode": { "type": "string" },
+        "sifatSurat": { "type": "string" },
+        "isiRingkas": { "type": "string" },
+        "status": { "type": "string" },
+        "pembuatNama": { "type": "string" },
+        "pembuatId": { "type": "string" },
+        "currentApprovalStage": { "type": "string" },
+        "ttdDigitalApplied": { "type": "boolean" },
+        "qrCodeUrl": { "type": "string" }
+      },
+      "required": ["id", "nomorSurat", "perihal", "status"]
+    },
+    "disposisi": {
+      "title": "Disposisi Surat",
+      "description": "Disposition routing records",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "suratMasukId": { "type": "string" },
+        "nomorSurat": { "type": "string" },
+        "perihal": { "type": "string" },
+        "pengirimNama": { "type": "string" },
+        "penerimaNama": { "type": "string" },
+        "unitTujuan": { "type": "string" },
+        "instruksi": { "type": "string" },
+        "sifatDisposisi": { "type": "string" },
+        "status": { "type": "string" },
+        "tanggalDisposisi": { "type": "string" }
+      },
+      "required": ["id", "suratMasukId", "instruksi", "status"]
+    },
+    "instansi": {
+      "title": "Master Instansi",
+      "description": "Agency profile and letterhead metadata",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "namaInstansi": { "type": "string" },
+        "kodeInstansi": { "type": "string" },
+        "alamat": { "type": "string text" },
+        "telepon": { "type": "string" },
+        "email": { "type": "string" },
+        "website": { "type": "string" },
+        "logoUrl": { "type": "string" }
+      },
+      "required": ["namaInstansi", "kodeInstansi"]
+    },
+    "jabatans": {
+      "title": "Master Jabatan",
+      "description": "Job titles and hierarchy",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "kodeJabatan": { "type": "string" },
+        "namaJabatan": { "type": "string" },
+        "level": { "type": "number" }
+      },
+      "required": ["id", "namaJabatan"]
+    },
+    "unitKerjas": {
+      "title": "Master Unit Kerja",
+      "description": "Department units",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "kodeUnit": { "type": "string" },
+        "namaUnit": { "type": "string" },
+        "keterangan": { "type": "string" }
+      },
+      "required": ["id", "namaUnit"]
+    },
+    "klasifikasis": {
+      "title": "Master Klasifikasi Surat",
+      "description": "Classification codes for official letters",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "kode": { "type": "string" },
+        "nama": { "type": "string" },
+        "retensiAktifTahun": { "type": "number" }
+      },
+      "required": ["id", "kode", "nama"]
+    },
+    "penandatangans": {
+      "title": "Master Penandatangan",
+      "description": "Authorized signers with digital signature certificates",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "pegawaiId": { "type": "string" },
+        "nama": { "type": "string" },
+        "nip": { "type": "string" },
+        "jabatan": { "type": "string" },
+        "statusDigitalCert": { "type": "string" }
+      },
+      "required": ["id", "nama"]
+    },
+    "templates": {
+      "title": "Template Surat",
+      "description": "Letter templates",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "namaTemplate": { "type": "string" },
+        "kategori": { "type": "string" },
+        "kontenHtml": { "type": "string text" }
+      },
+      "required": ["id", "namaTemplate"]
+    },
+    "historyLogs": {
+      "title": "Audit Logs",
+      "description": "System activity logs",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "userNama": { "type": "string" },
+        "userRole": { "type": "string" },
+        "aksi": { "type": "string" },
+        "deskripsi": { "type": "string" },
+        "modul": { "type": "string" },
+        "timestamp": { "type": "string" }
+      },
+      "required": ["id", "aksi", "timestamp"]
+    },
+    "systemConfig": {
+      "title": "System Configuration",
+      "description": "Application configuration and numbering rules",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "appTitle": { "type": "string" },
+        "nomeratorRule": { "type": "object" }
+      },
+      "required": ["id"]
+    }
+  }
+}

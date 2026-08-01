@@ -11,14 +11,18 @@ import {
   Eye,
   History,
   X,
-  FileSpreadsheet
+  FileSpreadsheet,
+  Download,
+  Printer
 } from 'lucide-react';
-import { SuratMasuk, MasterKlasifikasi, User } from '../../types';
+import { SuratMasuk, MasterKlasifikasi, MasterInstansi, User } from '../../types';
 import { formatTanggalIndo, getStatusBadgeClass } from '../../utils/formatter';
 import { exportToExcel } from '../../utils/excelExporter';
+import { generateSuratMasukPdf } from '../../utils/pdfGenerator';
 
 interface Props {
   suratMasukList: SuratMasuk[];
+  instansi: MasterInstansi;
   klasifikasis: MasterKlasifikasi[];
   currentUser: User;
   onOpenCreate: () => void;
@@ -29,6 +33,7 @@ interface Props {
 
 export const SuratMasukList: React.FC<Props> = ({
   suratMasukList,
+  instansi,
   klasifikasis,
   currentUser,
   onOpenCreate,
@@ -41,6 +46,29 @@ export const SuratMasukList: React.FC<Props> = ({
   const [selectedSifat, setSelectedSifat] = useState<string>('semua');
   const [previewSurat, setPreviewSurat] = useState<SuratMasuk | null>(null);
   const [historyModalSurat, setHistoryModalSurat] = useState<SuratMasuk | null>(null);
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+
+  const handleDownloadPdf = async (surat: SuratMasuk) => {
+    try {
+      setIsGeneratingPdf(true);
+      await generateSuratMasukPdf(surat, instansi, { autoDownload: true });
+    } catch (err) {
+      console.error('Error generating PDF:', err);
+    } finally {
+      setIsGeneratingPdf(false);
+    }
+  };
+
+  const handlePrintPdf = async (surat: SuratMasuk) => {
+    try {
+      setIsGeneratingPdf(true);
+      await generateSuratMasukPdf(surat, instansi, { printWindow: true });
+    } catch (err) {
+      console.error('Error printing PDF:', err);
+    } finally {
+      setIsGeneratingPdf(false);
+    }
+  };
 
   // Filtered List
   const filteredList = suratMasukList.filter((s) => {
@@ -291,32 +319,93 @@ export const SuratMasukList: React.FC<Props> = ({
         </div>
       </div>
 
-      {/* PDF Scan Viewer Modal */}
+      {/* Detail & PDF Viewer Modal */}
       {previewSurat && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 backdrop-blur-sm p-4">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl max-w-4xl w-full h-[85vh] flex flex-col overflow-hidden border border-slate-200 dark:border-slate-800">
-            <div className="p-4 bg-slate-900 text-white flex justify-between items-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 backdrop-blur-sm p-4 animate-in fade-in duration-150">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] flex flex-col overflow-hidden border border-slate-200 dark:border-slate-800">
+            {/* Header with actions */}
+            <div className="p-4 bg-slate-900 text-white flex flex-wrap justify-between items-center gap-3">
               <div>
-                <h3 className="font-bold text-sm">Preview Scan Naskah Surat Masuk</h3>
-                <p className="text-xs text-slate-400">{previewSurat.nomorSurat} - {previewSurat.asalSurat}</p>
+                <h3 className="font-bold text-sm flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-sky-400" /> Detail & Naskah Surat Masuk
+                </h3>
+                <p className="text-xs text-slate-400">{previewSurat.nomorAgenda} | {previewSurat.nomorSurat} - {previewSurat.asalSurat}</p>
               </div>
-              <button onClick={() => setPreviewSurat(null)} className="p-1 text-slate-400 hover:text-white">
-                <X className="w-5 h-5" />
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => handleDownloadPdf(previewSurat)}
+                  disabled={isGeneratingPdf}
+                  className="px-3 py-1.5 text-xs font-bold bg-sky-600 hover:bg-sky-500 text-white rounded-xl transition-colors flex items-center gap-1.5 shadow"
+                >
+                  <Download className="w-3.5 h-3.5" /> Unduh PDF
+                </button>
+                <button
+                  onClick={() => handlePrintPdf(previewSurat)}
+                  disabled={isGeneratingPdf}
+                  className="px-3 py-1.5 text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl transition-colors flex items-center gap-1.5 border border-slate-700"
+                >
+                  <Printer className="w-3.5 h-3.5" /> Cetak
+                </button>
+                <button onClick={() => setPreviewSurat(null)} className="p-1 text-slate-400 hover:text-white rounded-lg">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
             </div>
-            <div className="flex-1 bg-slate-100 dark:bg-slate-950 p-4 overflow-hidden">
-              {previewSurat.filePdfUrl ? (
-                <iframe
-                  src={previewSurat.filePdfUrl}
-                  title="PDF Preview"
-                  className="w-full h-full rounded-xl border border-slate-300 dark:border-slate-800"
-                />
-              ) : (
-                <div className="flex flex-col items-center justify-center h-full text-slate-400">
-                  <FileText className="w-12 h-12 mb-2" />
-                  <p className="text-sm">Tidak ada file scan yang diunggah untuk surat ini.</p>
+
+            {/* Modal Body */}
+            <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-slate-50 dark:bg-slate-950">
+              {/* Metadata Cards Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2 text-xs">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Informasi Surat</p>
+                  <div className="space-y-1.5 text-slate-700 dark:text-slate-300">
+                    <p><span className="text-slate-400">Nomor Agenda:</span> <strong className="font-mono text-sky-600 dark:text-sky-400">{previewSurat.nomorAgenda}</strong></p>
+                    <p><span className="text-slate-400">Nomor Surat:</span> <strong>{previewSurat.nomorSurat}</strong></p>
+                    <p><span className="text-slate-400">Asal Instansi:</span> <strong>{previewSurat.asalSurat}</strong></p>
+                    <p><span className="text-slate-400">Tanggal Surat:</span> {formatTanggalIndo(previewSurat.tanggalSurat)}</p>
+                    <p><span className="text-slate-400">Tanggal Diterima:</span> {formatTanggalIndo(previewSurat.tanggalTerima)}</p>
+                  </div>
                 </div>
-              )}
+
+                <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2 text-xs">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Sifat & Status</p>
+                  <div className="space-y-1.5 text-slate-700 dark:text-slate-300">
+                    <p><span className="text-slate-400">Sifat Surat:</span> <span className="font-bold text-amber-600 dark:text-amber-400">{previewSurat.sifatSurat}</span></p>
+                    <p><span className="text-slate-400">Kode Klasifikasi:</span> <span className="font-mono px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 rounded">{previewSurat.klasifikasiKode}</span></p>
+                    <p><span className="text-slate-400">Status Alur:</span> <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${getStatusBadgeClass(previewSurat.status)}`}>{previewSurat.status}</span></p>
+                    <p><span className="text-slate-400">Petugas Input:</span> {previewSurat.petugasInput}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Perihal & Ringkasan */}
+              <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2 text-xs">
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Perihal & Ringkasan Isi</p>
+                <h4 className="font-bold text-sm text-slate-900 dark:text-white">{previewSurat.perihal}</h4>
+                <p className="text-slate-600 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg border border-slate-100 dark:border-slate-800">
+                  {previewSurat.ringkasanIsi || previewSurat.perihal}
+                </p>
+              </div>
+
+              {/* Scan Document Viewer / PDF Iframe */}
+              <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2 text-xs">
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Lampiran Berkas Scan</p>
+                {previewSurat.filePdfUrl ? (
+                  <div className="h-80 w-full rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800">
+                    <iframe
+                      src={previewSurat.filePdfUrl}
+                      title="PDF Preview"
+                      className="w-full h-full"
+                    />
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center justify-center p-8 text-slate-400 bg-slate-50 dark:bg-slate-800/30 rounded-xl border border-dashed border-slate-200 dark:border-slate-800">
+                    <FileText className="w-10 h-10 mb-2 opacity-50" />
+                    <p className="text-xs">Tidak ada file scan fisik yang diunggah.</p>
+                    <p className="text-[11px] text-slate-500 mt-1">Gunakan tombol "Unduh PDF" di atas untuk menghasilkan Lembar Disposisi digital otomatis.</p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
