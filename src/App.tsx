@@ -25,6 +25,7 @@ import { ArsipDigitalView } from './components/arsip/ArsipDigital';
 import { LaporanRekapView } from './components/laporan/LaporanRekap';
 import { SystemSettingsView } from './components/settings/SystemSettings';
 import { QRVerifyModal } from './components/common/QRVerifyModal';
+import { LoginModal } from './components/auth/LoginModal';
 
 export default function App() {
   const [appState, setAppState] = useState<AppState>(apiService.getState());
@@ -45,6 +46,7 @@ export default function App() {
   const [preselectedDisposisiSurat, setPreselectedDisposisiSurat] = useState<SuratMasuk | null>(null);
 
   const [qrModalOpen, setQrModalOpen] = useState(false);
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
 
   // Subscribe to apiService state updates
   useEffect(() => {
@@ -80,6 +82,7 @@ export default function App() {
         notifications={appState.notifications}
         onMarkAllNotificationsRead={() => apiService.markAllNotificationsRead()}
         onOpenQRVerify={() => setQrModalOpen(true)}
+        onOpenLogin={() => setLoginModalOpen(true)}
         isDarkMode={isDarkMode}
         onToggleDarkMode={handleToggleDarkMode}
       />
@@ -326,6 +329,19 @@ export default function App() {
         isOpen={qrModalOpen}
         onClose={() => setQrModalOpen(false)}
         verifyData={null}
+      />
+
+      {/* Login Akses Email & PIN Modal */}
+      <LoginModal
+        isOpen={loginModalOpen}
+        onClose={() => setLoginModalOpen(false)}
+        users={appState.users}
+        instansi={appState.instansi}
+        currentUser={appState.currentUser}
+        onLoginSuccess={(user) => {
+          apiService.setCurrentUser(user);
+          setLoginModalOpen(false);
+        }}
       />
 
     </div>

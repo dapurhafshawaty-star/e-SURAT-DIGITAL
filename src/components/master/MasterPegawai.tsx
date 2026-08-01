@@ -67,6 +67,7 @@ export const MasterPegawaiView: React.FC<Props> = ({
       unitKerja: formData.unitKerja || 'General',
       noHp: formData.noHp || '-',
       email: formData.email || '',
+      pin: formData.pin || '123456',
       role: (formData.role || 'Pegawai') as Role,
       status: formData.status || 'Aktif',
       foto: formData.foto || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80'
@@ -233,21 +234,35 @@ export const MasterPegawaiView: React.FC<Props> = ({
                 </div>
               </div>
 
-              <div>
-                <label className="block text-xs font-semibold mb-1">Role System (Hak Akses)</label>
-                <select
-                  value={formData.role || 'Pegawai'}
-                  onChange={(e) => setFormData({ ...formData, role: e.target.value as Role })}
-                  className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 font-bold"
-                >
-                  <option value="Administrator">Administrator</option>
-                  <option value="Operator">Operator Persuratan</option>
-                  <option value="Sekretaris">Sekretaris Dinas</option>
-                  <option value="Kepala Bagian">Kepala Bagian / Kabag</option>
-                  <option value="Pimpinan">Pimpinan / Kepala Dinas</option>
-                  <option value="Pegawai">Pegawai</option>
-                  <option value="Tamu">Tamu / Publik</option>
-                </select>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold mb-1">PIN Akses Email (6 Angka)</label>
+                  <input
+                    type="password"
+                    maxLength={10}
+                    placeholder="Contoh: 123456"
+                    value={formData.pin || ''}
+                    onChange={(e) => setFormData({ ...formData, pin: e.target.value })}
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 font-mono"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold mb-1">Role System (Hak Akses)</label>
+                  <select
+                    value={formData.role || 'Pegawai'}
+                    onChange={(e) => setFormData({ ...formData, role: e.target.value as Role })}
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 font-bold"
+                  >
+                    <option value="Administrator">Administrator</option>
+                    <option value="Operator">Operator Persuratan</option>
+                    <option value="Sekretaris">Sekretaris Dinas</option>
+                    <option value="Kepala Bagian">Kepala Bagian / Kabag</option>
+                    <option value="Pimpinan">Pimpinan / Kepala Dinas</option>
+                    <option value="Pegawai">Pegawai</option>
+                    <option value="Tamu">Tamu / Publik</option>
+                  </select>
+                </div>
               </div>
 
               <div className="flex justify-end gap-2 pt-3 border-t border-slate-200 dark:border-slate-800">

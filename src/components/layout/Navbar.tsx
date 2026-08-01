@@ -9,7 +9,9 @@ import {
   CheckCircle2,
   Clock,
   Sparkles,
-  Calendar
+  Calendar,
+  KeyRound,
+  LogOut
 } from 'lucide-react';
 import { User, NotificationItem } from '../../types';
 import { formatTanggalIndo } from '../../utils/formatter';
@@ -23,6 +25,7 @@ interface Props {
   notifications: NotificationItem[];
   onMarkAllNotificationsRead: () => void;
   onOpenQRVerify?: () => void;
+  onOpenLogin?: () => void;
   isDarkMode?: boolean;
   onToggleDarkMode?: () => void;
 }
@@ -35,6 +38,7 @@ export const Navbar: React.FC<Props> = ({
   notifications,
   onMarkAllNotificationsRead,
   onOpenQRVerify,
+  onOpenLogin,
   isDarkMode = false,
   onToggleDarkMode
 }) => {
@@ -183,13 +187,25 @@ export const Navbar: React.FC<Props> = ({
           {showUserMenu && (
             <div className="absolute right-0 mt-2 w-72 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 p-3 z-50">
               <div className="px-3 py-2 bg-slate-50 dark:bg-slate-800 rounded-xl mb-2">
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Simulasi Akun Pengguna</p>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Akun Aktif</p>
                 <p className="text-xs font-bold text-slate-800 dark:text-slate-200 mt-0.5">{currentUser.nama}</p>
-                <p className="text-[10px] text-slate-500">{currentUser.jabatan}</p>
+                <p className="text-[10px] text-slate-500">{currentUser.email} • {currentUser.role}</p>
               </div>
 
-              <div className="text-[10px] font-bold text-slate-400 uppercase px-3 my-1">Ganti Pengguna:</div>
-              <div className="space-y-1 max-h-56 overflow-y-auto">
+              {onOpenLogin && (
+                <button
+                  onClick={() => {
+                    setShowUserMenu(false);
+                    onOpenLogin();
+                  }}
+                  className="w-full mb-2 p-2.5 bg-sky-600 hover:bg-sky-500 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2 shadow-sm transition-all"
+                >
+                  <KeyRound className="w-4 h-4" /> Login Akses Email & PIN
+                </button>
+              )}
+
+              <div className="text-[10px] font-bold text-slate-400 uppercase px-3 my-1">Switch Akun Pengguna:</div>
+              <div className="space-y-1 max-h-52 overflow-y-auto">
                 {users.map((u) => (
                   <button
                     key={u.id}

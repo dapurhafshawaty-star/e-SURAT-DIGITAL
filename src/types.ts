@@ -29,6 +29,7 @@ export interface User {
   role: Role;
   status: 'Aktif' | 'Nonaktif';
   password?: string;
+  pin?: string;
   ttdDigital?: string;
 }
 

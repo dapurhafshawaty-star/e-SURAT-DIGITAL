@@ -61,6 +61,7 @@ export const initialUsers: User[] = [
     unitKerja: "Subbagian Umum & Kepegawaian",
     noHp: "0812-3456-7890",
     email: "admin@esurat.go.id",
+    pin: "123456",
     role: "Administrator",
     status: "Aktif",
     foto: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&auto=format&fit=crop&q=80"
@@ -73,6 +74,7 @@ export const initialUsers: User[] = [
     unitKerja: "Subbagian Umum & Kepegawaian",
     noHp: "0813-9876-5432",
     email: "operator@esurat.go.id",
+    pin: "123456",
     role: "Operator",
     status: "Aktif",
     foto: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=120&auto=format&fit=crop&q=80"
@@ -85,6 +87,7 @@ export const initialUsers: User[] = [
     unitKerja: "Sekretariat Utama",
     noHp: "0811-2233-4455",
     email: "sekretaris@esurat.go.id",
+    pin: "123456",
     role: "Sekretaris",
     status: "Aktif",
     foto: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=120&auto=format&fit=crop&q=80"
@@ -97,6 +100,7 @@ export const initialUsers: User[] = [
     unitKerja: "Bagian Tata Usaha",
     noHp: "0852-1122-3344",
     email: "kabag.tu@esurat.go.id",
+    pin: "123456",
     role: "Kepala Bagian",
     status: "Aktif",
     foto: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&auto=format&fit=crop&q=80"
@@ -109,6 +113,7 @@ export const initialUsers: User[] = [
     unitKerja: "Pimpinan Tinggi",
     noHp: "0812-9988-7766",
     email: "pimpinan@esurat.go.id",
+    pin: "123456",
     role: "Pimpinan",
     status: "Aktif",
     foto: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&auto=format&fit=crop&q=80"
@@ -121,6 +126,7 @@ export const initialUsers: User[] = [
     unitKerja: "Bidang Layanan E-Government",
     noHp: "0818-0011-2233",
     email: "hendrik@esurat.go.id",
+    pin: "123456",
     role: "Pegawai",
     status: "Aktif",
     foto: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=120&auto=format&fit=crop&q=80"
@@ -133,6 +139,7 @@ export const initialUsers: User[] = [
     unitKerja: "Publik",
     noHp: "0800-0000-0000",
     email: "tamu@esurat.go.id",
+    pin: "123456",
     role: "Tamu",
     status: "Aktif"
   }
