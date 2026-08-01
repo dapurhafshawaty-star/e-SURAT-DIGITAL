@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Building2, Save, Upload, PenTool, AlignLeft, AlignCenter, AlignRight, Type, Image as ImageIcon, Sliders, Layers, Eye } from 'lucide-react';
 import { MasterInstansi } from '../../types';
 import { SignaturePadModal } from '../common/SignaturePadModal';
@@ -30,6 +30,32 @@ export const MasterInstansiView: React.FC<Props> = ({ instansi, onSave }) => {
     kontakItalic: instansi.kontakItalic ?? true,
     kopGarisStyle: instansi.kopGarisStyle ?? 'double',
   });
+
+  useEffect(() => {
+    if (instansi) {
+      setFormData({
+        ...instansi,
+        barisAtasHeader: instansi.barisAtasHeader ?? 'PEMERINTAH PROVINSI / KABUPATEN',
+        logoSize: instansi.logoSize ?? 70,
+        kopAlign: instansi.kopAlign ?? 'center',
+        fontFamilyHeader: instansi.fontFamilyHeader ?? 'Times New Roman',
+        barisAtasSize: instansi.barisAtasSize ?? 13,
+        barisAtasBold: instansi.barisAtasBold ?? true,
+        barisAtasUppercase: instansi.barisAtasUppercase ?? true,
+        namaInstansiSize: instansi.namaInstansiSize ?? 16,
+        namaInstansiBold: instansi.namaInstansiBold ?? true,
+        namaInstansiUppercase: instansi.namaInstansiUppercase ?? true,
+        subHeaderSize: instansi.subHeaderSize ?? 13,
+        subHeaderBold: instansi.subHeaderBold ?? true,
+        subHeaderUppercase: instansi.subHeaderUppercase ?? true,
+        alamatSize: instansi.alamatSize ?? 11,
+        alamatItalic: instansi.alamatItalic ?? false,
+        kontakSize: instansi.kontakSize ?? 10,
+        kontakItalic: instansi.kontakItalic ?? true,
+        kopGarisStyle: instansi.kopGarisStyle ?? 'double',
+      });
+    }
+  }, [instansi]);
 
   const [showPadModal, setShowPadModal] = useState(false);
 
