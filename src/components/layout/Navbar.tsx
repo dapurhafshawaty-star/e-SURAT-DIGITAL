@@ -26,6 +26,7 @@ interface Props {
   onMarkAllNotificationsRead: () => void;
   onOpenQRVerify?: () => void;
   onOpenLogin?: () => void;
+  onLogout?: () => void;
   isDarkMode?: boolean;
   onToggleDarkMode?: () => void;
 }
@@ -39,6 +40,7 @@ export const Navbar: React.FC<Props> = ({
   onMarkAllNotificationsRead,
   onOpenQRVerify,
   onOpenLogin,
+  onLogout,
   isDarkMode = false,
   onToggleDarkMode
 }) => {
@@ -193,17 +195,31 @@ export const Navbar: React.FC<Props> = ({
                 <p className="text-[10px] text-slate-400 font-mono mt-0.5">{currentUser.unitKerja}</p>
               </div>
 
-              {onOpenLogin && (
-                <button
-                  onClick={() => {
-                    setShowUserMenu(false);
-                    onOpenLogin();
-                  }}
-                  className="w-full p-2.5 bg-sky-600 hover:bg-sky-500 active:bg-sky-700 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2 shadow-sm transition-all"
-                >
-                  <KeyRound className="w-4 h-4" /> Masuk Akun Lain (PIN Email)
-                </button>
-              )}
+              <div className="space-y-1.5">
+                {onOpenLogin && (
+                  <button
+                    onClick={() => {
+                      setShowUserMenu(false);
+                      onOpenLogin();
+                    }}
+                    className="w-full p-2.5 bg-sky-600 hover:bg-sky-500 active:bg-sky-700 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2 shadow-sm transition-all"
+                  >
+                    <KeyRound className="w-4 h-4" /> Masuk Akun Lain
+                  </button>
+                )}
+
+                {onLogout && (
+                  <button
+                    onClick={() => {
+                      setShowUserMenu(false);
+                      onLogout();
+                    }}
+                    className="w-full p-2.5 bg-rose-50 dark:bg-rose-950/60 hover:bg-rose-100 dark:hover:bg-rose-900/80 text-rose-700 dark:text-rose-300 font-bold rounded-xl text-xs flex items-center justify-center gap-2 border border-rose-200 dark:border-rose-800 transition-all"
+                  >
+                    <LogOut className="w-4 h-4" /> Keluar Sesi / Logout
+                  </button>
+                )}
+              </div>
             </div>
           )}
         </div>

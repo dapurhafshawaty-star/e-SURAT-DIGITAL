@@ -46,7 +46,18 @@ export default function App() {
   const [preselectedDisposisiSurat, setPreselectedDisposisiSurat] = useState<SuratMasuk | null>(null);
 
   const [qrModalOpen, setQrModalOpen] = useState(false);
-  const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    return sessionStorage.getItem('esurat_auth_logged_in') === 'true';
+  });
+  const [loginModalOpen, setLoginModalOpen] = useState<boolean>(() => {
+    return sessionStorage.getItem('esurat_auth_logged_in') !== 'true';
+  });
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    sessionStorage.removeItem('esurat_auth_logged_in');
+    setLoginModalOpen(true);
+  };
 
   // Subscribe to apiService state updates
   useEffect(() => {
@@ -83,6 +94,7 @@ export default function App() {
         onMarkAllNotificationsRead={() => apiService.markAllNotificationsRead()}
         onOpenQRVerify={() => setQrModalOpen(true)}
         onOpenLogin={() => setLoginModalOpen(true)}
+        onLogout={handleLogout}
         isDarkMode={isDarkMode}
         onToggleDarkMode={handleToggleDarkMode}
       />
@@ -333,13 +345,15 @@ export default function App() {
 
       {/* Login Akses Email & PIN Modal */}
       <LoginModal
-        isOpen={loginModalOpen}
-        onClose={() => setLoginModalOpen(false)}
+        isOpen={loginModalOpen || !isAuthenticated}
+        onClose={isAuthenticated ? () => setLoginModalOpen(false) : undefined}
         users={appState.users}
         instansi={appState.instansi}
         currentUser={appState.currentUser}
         onLoginSuccess={(user) => {
           apiService.setCurrentUser(user);
+          setIsAuthenticated(true);
+          sessionStorage.setItem('esurat_auth_logged_in', 'true');
           setLoginModalOpen(false);
         }}
       />
