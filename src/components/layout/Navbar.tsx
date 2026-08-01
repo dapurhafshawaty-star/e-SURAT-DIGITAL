@@ -183,13 +183,14 @@ export const Navbar: React.FC<Props> = ({
             <ChevronDown className="w-4 h-4 text-slate-400" />
           </button>
 
-          {/* Role Switching Dropdown */}
+          {/* User Dropdown */}
           {showUserMenu && (
             <div className="absolute right-0 mt-2 w-72 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 p-3 z-50">
-              <div className="px-3 py-2 bg-slate-50 dark:bg-slate-800 rounded-xl mb-2">
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Akun Aktif</p>
+              <div className="px-3 py-2 bg-slate-50 dark:bg-slate-800 rounded-xl mb-3">
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Pengguna Aktif Terautentikasi</p>
                 <p className="text-xs font-bold text-slate-800 dark:text-slate-200 mt-0.5">{currentUser.nama}</p>
-                <p className="text-[10px] text-slate-500">{currentUser.email} • {currentUser.role}</p>
+                <p className="text-[10px] text-slate-500 mt-0.5">{currentUser.email} • {currentUser.role}</p>
+                <p className="text-[10px] text-slate-400 font-mono mt-0.5">{currentUser.unitKerja}</p>
               </div>
 
               {onOpenLogin && (
@@ -198,38 +199,11 @@ export const Navbar: React.FC<Props> = ({
                     setShowUserMenu(false);
                     onOpenLogin();
                   }}
-                  className="w-full mb-2 p-2.5 bg-sky-600 hover:bg-sky-500 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2 shadow-sm transition-all"
+                  className="w-full p-2.5 bg-sky-600 hover:bg-sky-500 active:bg-sky-700 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2 shadow-sm transition-all"
                 >
-                  <KeyRound className="w-4 h-4" /> Login Akses Email & PIN
+                  <KeyRound className="w-4 h-4" /> Masuk Akun Lain (PIN Email)
                 </button>
               )}
-
-              <div className="text-[10px] font-bold text-slate-400 uppercase px-3 my-1">Switch Akun Pengguna:</div>
-              <div className="space-y-1 max-h-52 overflow-y-auto">
-                {users.map((u) => (
-                  <button
-                    key={u.id}
-                    onClick={() => {
-                      onSwitchUser(u);
-                      setShowUserMenu(false);
-                    }}
-                    className={`w-full text-left p-2 rounded-xl text-xs flex items-center justify-between transition-all ${
-                      u.id === currentUser.id
-                        ? 'bg-blue-50 dark:bg-blue-950/60 font-bold text-blue-700 dark:text-blue-300'
-                        : 'hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <UserCheck className="w-3.5 h-3.5 text-blue-600 flex-shrink-0" />
-                      <div>
-                        <p className="font-semibold text-slate-800 dark:text-slate-200">{u.nama}</p>
-                        <p className="text-[10px] text-slate-500">{u.role}</p>
-                      </div>
-                    </div>
-                    {u.id === currentUser.id && <CheckCircle2 className="w-4 h-4 text-blue-600" />}
-                  </button>
-                ))}
-              </div>
             </div>
           )}
         </div>

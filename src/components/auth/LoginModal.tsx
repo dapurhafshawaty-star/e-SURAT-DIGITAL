@@ -9,7 +9,6 @@ import {
   CheckCircle2,
   AlertCircle,
   HelpCircle,
-  UserCheck,
   X
 } from 'lucide-react';
 import { User, MasterInstansi } from '../../types';
@@ -64,7 +63,7 @@ export const LoginModal: React.FC<Props> = ({
     );
 
     if (!targetUser) {
-      setErrorMsg(`Email "${cleanEmail}" belum terdaftar dalam sistem e-Surat.`);
+      setErrorMsg('Email atau PIN Akses yang Anda masukkan tidak sesuai.');
       return;
     }
 
@@ -73,10 +72,10 @@ export const LoginModal: React.FC<Props> = ({
       return;
     }
 
-    // Verify PIN (default to '123456' if targetUser.pin is empty)
-    const expectedPin = targetUser.pin || '123456';
-    if (cleanPin !== expectedPin) {
-      setErrorMsg('PIN Akses Email tidak sesuai. PIN standar bawaan adalah 123456.');
+    // Verify PIN securely against stored pin
+    const expectedPin = targetUser.pin;
+    if (!expectedPin || cleanPin !== expectedPin) {
+      setErrorMsg('Email atau PIN Akses yang Anda masukkan tidak sesuai.');
       return;
     }
 
@@ -86,12 +85,6 @@ export const LoginModal: React.FC<Props> = ({
       onLoginSuccess(targetUser);
       if (onClose) onClose();
     }, 600);
-  };
-
-  const handleQuickSelectUser = (u: User) => {
-    setEmail(u.email);
-    setPin(u.pin || '123456');
-    setErrorMsg('');
   };
 
   return (
@@ -120,7 +113,7 @@ export const LoginModal: React.FC<Props> = ({
           <h2 className="text-lg font-bold tracking-tight text-white">{instansi.nama}</h2>
           <p className="text-xs text-sky-300 font-medium mt-0.5">Sistem Administrasi Persuratan & Disposisi Digital</p>
           <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 bg-sky-500/20 rounded-full border border-sky-400/30 text-[10px] font-bold text-sky-200 uppercase tracking-wider">
-            <ShieldCheck className="w-3.5 h-3.5 text-sky-400" /> Autentikasi PIN Email Terdaftar
+            <ShieldCheck className="w-3.5 h-3.5 text-sky-400" /> Autentikasi Keamanan PIN Email
           </div>
         </div>
 
@@ -156,7 +149,7 @@ export const LoginModal: React.FC<Props> = ({
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="contoh: admin@esurat.go.id"
+                  placeholder="Masukkan email resmi Anda"
                   className="w-full pl-9 pr-4 py-2.5 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white font-medium focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all"
                   required
                 />
@@ -167,7 +160,7 @@ export const LoginModal: React.FC<Props> = ({
             <div>
               <div className="flex justify-between items-center mb-1.5">
                 <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
-                  PIN Akses Email (6 Digit)
+                  PIN Akses Email
                 </label>
                 <button
                   type="button"
@@ -187,7 +180,7 @@ export const LoginModal: React.FC<Props> = ({
                   maxLength={10}
                   value={pin}
                   onChange={(e) => setPin(e.target.value)}
-                  placeholder="Masukkan 6 angka PIN"
+                  placeholder="Masukkan PIN Akses Anda"
                   className="w-full pl-9 pr-10 py-2.5 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white font-mono tracking-widest text-sm font-bold focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all"
                   required
                 />
@@ -210,40 +203,12 @@ export const LoginModal: React.FC<Props> = ({
             </button>
           </form>
 
-          {/* Quick Select Preset Registered Accounts */}
-          <div className="pt-3 border-t border-slate-200 dark:border-slate-800 space-y-2">
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-              Pilih Cepat Akun Terdaftar (Uji Coba PIN: <span className="font-mono text-sky-600 dark:text-sky-400">123456</span>):
-            </p>
-
-            <div className="grid grid-cols-2 gap-1.5 max-h-36 overflow-y-auto pr-1">
-              {users.map((u) => (
-                <button
-                  key={u.id}
-                  type="button"
-                  onClick={() => handleQuickSelectUser(u)}
-                  className={`p-2 rounded-xl border text-left text-xs transition-all flex items-center gap-2 ${
-                    email.toLowerCase() === u.email.toLowerCase()
-                      ? 'bg-sky-50 dark:bg-sky-950/80 border-sky-300 dark:border-sky-800 text-sky-900 dark:text-sky-200 font-bold shadow-xs'
-                      : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200/80 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300'
-                  }`}
-                >
-                  <UserCheck className="w-3.5 h-3.5 text-sky-600 flex-shrink-0" />
-                  <div className="truncate">
-                    <p className="font-semibold truncate text-[11px]">{u.nama}</p>
-                    <p className="text-[9px] text-slate-400 truncate">{u.role} ({u.email.split('@')[0]})</p>
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
-
         </div>
 
         {/* Footer info */}
         <div className="bg-slate-50 dark:bg-slate-950 p-3 text-center border-t border-slate-200 dark:border-slate-800">
           <p className="text-[10px] text-slate-400">
-            e-Surat Digital Government &copy; {new Date().getFullYear()} - Terverifikasi Keamanan PIN
+            e-Surat Digital Government &copy; {new Date().getFullYear()} - Terenkripsi & Terverifikasi
           </p>
         </div>
 
@@ -255,13 +220,13 @@ export const LoginModal: React.FC<Props> = ({
           <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl max-w-sm w-full p-5 border border-slate-200 dark:border-slate-800 space-y-3">
             <div className="flex items-center gap-2 text-sky-600">
               <HelpCircle className="w-5 h-5" />
-              <h4 className="font-bold text-sm text-slate-900 dark:text-white">Bantuan PIN Akses Email</h4>
+              <h4 className="font-bold text-sm text-slate-900 dark:text-white">Bantuan Akses PIN</h4>
             </div>
             <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-              PIN Akses secara default diset ke <strong className="font-mono text-sky-600">123456</strong> untuk seluruh akun terdaftar.
+              Demi keamanan sistem, PIN Akses Email dikelola oleh Administrator Instansi atau dapat diperbarui secara mandiri oleh pejabat yang berwenang.
             </p>
             <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-              Jika Anda mengubah PIN di menu Master Pegawai, gunakan PIN baru Anda. Untuk mereset PIN, hubungi Administrator Sistem.
+              Jika Anda lupa PIN Akses Email Anda, silakan hubungi Administrator Subbagian Kepegawaian/Umum untuk melakukan verifikasi dan pembaruan PIN.
             </p>
             <div className="pt-2 flex justify-end">
               <button
@@ -269,7 +234,7 @@ export const LoginModal: React.FC<Props> = ({
                 onClick={() => setShowForgotModal(false)}
                 className="px-4 py-1.5 bg-sky-600 text-white font-bold text-xs rounded-xl"
               >
-                Mengerti
+                Tutup
               </button>
             </div>
           </div>

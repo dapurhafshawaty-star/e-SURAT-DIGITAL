@@ -236,11 +236,11 @@ export const MasterPegawaiView: React.FC<Props> = ({
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold mb-1">PIN Akses Email (6 Angka)</label>
+                  <label className="block text-xs font-semibold mb-1">PIN Akses Email</label>
                   <input
                     type="password"
                     maxLength={10}
-                    placeholder="Contoh: 123456"
+                    placeholder="Atur PIN Akses"
                     value={formData.pin || ''}
                     onChange={(e) => setFormData({ ...formData, pin: e.target.value })}
                     className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 font-mono"
